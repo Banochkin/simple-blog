@@ -9,7 +9,7 @@
       {{ session()->get('success') }}  
     </div>
     @endif
-    <a href="{{ route('image.create')}}" class="btn btn-primary mb-3"></a>
+    <a href="{{ route('gallery.create')}}" class="btn btn-primary mb-3">Add image</a>
   <table class="table table-striped">
     <thead>
         <tr>
@@ -19,15 +19,15 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($posts as $post)
+        @foreach($images as $image)
         <tr>
-            <td>{{$post->id}}</td>
-            <td><a href="{{ route('image.show',$post->id)}}">{{$post->header}}</a></td>
+            <td>{{$image->id}}</td>
+            <td><a href="{{ route('gallery.show',$image->id)}}">{{$image->header}}</a></td>
             <td>
-                <a href="{{ route('image.edit',$post->id)}}" class="btn btn-primary">Edit</a>
+                <a href="{{ route('gallery.edit',$image->id)}}" class="btn btn-primary">Edit</a>
             </td>
             <td>
-                <form action="{{ route('image.destroy', $post->id)}}" method="post">
+                <form action="{{ route('gallery.destroy', $image->id)}}" method="image">
                   @csrf
                   @method('DELETE')
                   <button class="btn btn-danger" type="submit">Delete</button>
