@@ -123,6 +123,9 @@ class BlogController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        $post->delete();
+
+        return redirect('/blog')->with('success', 'Post deleted!');
     }
 }
