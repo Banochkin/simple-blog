@@ -4,6 +4,11 @@
 <div class="row">
 <div class="col-sm-12">
     <h1 class="display-3">Posts</h1>
+    @if(session()->get('success'))
+    <div class="alert alert-success">
+      {{ session()->get('success') }}  
+    </div>
+    @endif
     <a href="{{ route('blog.create')}}" class="btn btn-primary mb-3">New post</a>
   <table class="table table-striped">
     <thead>
