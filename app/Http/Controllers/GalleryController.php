@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Image;
+
 class GalleryController extends Controller
 {
     /**
@@ -13,7 +15,9 @@ class GalleryController extends Controller
      */
     public function index()
     {
-        //
+        $images = Image::all();
+
+        return view('gallery.index', compact('images'));
     }
 
     /**
@@ -23,7 +27,7 @@ class GalleryController extends Controller
      */
     public function create()
     {
-        //
+        return view('gallery.create');
     }
 
     /**
@@ -34,7 +38,18 @@ class GalleryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'filename' => 'required',
+        ]);
+
+        $image = new Image([
+            'filename' => $request->get('filename'),
+            'description' => $request->get('description'),
+        ]);
+
+        $image->save();
+
+        return redirect('/gallery')->with('success', 'Image saved!');
     }
 
     /**
@@ -45,7 +60,9 @@ class GalleryController extends Controller
      */
     public function show($id)
     {
-        //
+        $image = Image::find($id);
+
+        return view('gallery.show', compact('image'));
     }
 
     /**
@@ -56,7 +73,9 @@ class GalleryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $image = Image::find($id);
+
+        return view('gallery.edit', compact('image'));
     }
 
     /**
@@ -68,7 +87,18 @@ class GalleryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'filename' => 'required',
+        ]);
+
+        $image = Image::find($id);
+
+        $image->filename = $request->get('filename');
+        $image->description = $request->get('description');
+
+        $image->save();
+
+        return redirect('/gallery')->with('success', 'Image updated!');
     }
 
     /**
