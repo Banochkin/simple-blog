@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Post;
+
 class BlogController extends Controller
 {
     /**
@@ -13,7 +15,9 @@ class BlogController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::all();
+
+        return view('blog.index', compact('posts'));
     }
 
     /**
@@ -23,7 +27,7 @@ class BlogController extends Controller
      */
     public function create()
     {
-        //
+        return view('blog.create');
     }
 
     /**
@@ -34,7 +38,25 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'header' => 'required',
+            'content' => 'required',
+            'slug' => 'required',
+            'preview' => 'required',
+            'main_image' => 'required',
+        ]);
+
+        $post = new Post([
+            'header' => $request->get('header'),
+            'content' => $request->get('content'),
+            'slug' => $request->get('slug'),
+            'preview' => $request->get('preview'),
+            'main_image' => $request->get('main_image'),
+        ]);
+
+        $post->save();
+
+        return redirect('/blog')->with('success', 'Post saved!');
     }
 
     /**
@@ -45,7 +67,9 @@ class BlogController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = Post::find($id);
+
+        return view('blog.show', compact('post'));
     }
 
     /**
@@ -56,7 +80,9 @@ class BlogController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::find($id);
+
+        return view('blog.edit', compact('post'));
     }
 
     /**
@@ -68,7 +94,25 @@ class BlogController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'header' => 'required',
+            'content' => 'required',
+            'slug' => 'required',
+            'preview' => 'required',
+            'main_image' => 'required',
+        ]);
+
+        $post = Post::find($id);
+
+        $post->header = $request->get('header');
+        $post->content = $request->get('content');
+        $post->slug = $request->get('slug');
+        $post->preview = $request->get('preview');
+        $post->main_image = $request->get('main_image');
+
+        $post->save();
+
+        return redirect('/blog')->with('success', 'Post updated!');
     }
 
     /**
