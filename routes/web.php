@@ -21,3 +21,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('blog', 'BlogController');
 Route::resource('gallery', 'GalleryController');
+
+Route::get('image-upload', 'ImageUploadController@imageUpload')->name('image.upload');
+Route::post('image-upload', 'ImageUploadController@imageUploadPost')->name('image.upload.post');
