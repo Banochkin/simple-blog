@@ -10,7 +10,7 @@
     </div>
     @endif
     <a href="{{ route('gallery.create')}}" class="btn btn-primary mb-3">Add image</a>
-  <table class="table table-striped">
+  <table class="table table-striped table__gallery">
     <thead>
         <tr>
           <td>ID</td>
@@ -22,12 +22,15 @@
         @foreach($images as $image)
         <tr>
             <td>{{$image->id}}</td>
-            <td><a href="{{ route('gallery.show',$image->id)}}">{{$image->header}}</a></td>
+            <td>
+              <a href="{{ route('gallery.show',$image->id)}}"><img src="/images/{{$image->filename}}" /></a><br />
+              {{$image->description}}
+            </td>
             <td>
                 <a href="{{ route('gallery.edit',$image->id)}}" class="btn btn-primary">Edit</a>
             </td>
             <td>
-                <form action="{{ route('gallery.destroy', $image->id)}}" method="image">
+                <form action="{{ route('gallery.destroy', $image->id)}}" method="post">
                   @csrf
                   @method('DELETE')
                   <button class="btn btn-danger" type="submit">Delete</button>
@@ -37,6 +40,6 @@
         @endforeach
     </tbody>
   </table>
-<div>
+</div>
 </div>
 @endsection

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 use App\Image;
+use App\Tag;
 
 class GalleryController extends Controller
 {
@@ -62,7 +65,9 @@ class GalleryController extends Controller
     {
         $image = Image::find($id);
 
-        return view('gallery.show', compact('image'));
+        $tags = Image::find($id)->showTags;
+
+        return view('gallery.show', compact('image', 'tags'));
     }
 
     /**
@@ -75,7 +80,9 @@ class GalleryController extends Controller
     {
         $image = Image::find($id);
 
-        return view('gallery.edit', compact('image'));
+        $tags = Image::find($id)->showTags;
+
+        return view('gallery.edit', compact('image', 'tags'));
     }
 
     /**
@@ -87,14 +94,46 @@ class GalleryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'filename' => 'required',
-        ]);
 
         $image = Image::find($id);
 
-        $image->filename = $request->get('filename');
         $image->description = $request->get('description');
+
+        //$imageId = $id;
+        $postTags = $request->get('tags');
+        $postTagsArr = explode(', ', $postTags);
+        $postTagsArr = array_unique($postTagsArr);
+        foreach ($postTagsArr as $postTag) {
+            if(Tag::where('name', $postTag)->exists()) {
+
+                $tagId = Tag::where('name', $postTag)->first()->id;
+
+                if(!$image->showTags->contains($tagId)) {
+                    DB::table('images_tags')->insertGetId([
+                        'image_id' => $id,
+                        'tag_id' => $tagId,
+                        'created_at' => \Carbon\Carbon::now(),
+                        'updated_at' => \Carbon\Carbon::now()
+                      ]);
+                }
+
+            } else {
+                $tag = new Tag ([
+                    'name' => $postTag,
+                ]);
+
+                $tag->save();
+
+                $tagId = $tag->id;
+
+                DB::table('images_tags')->insertGetId([
+                    'image_id' => $id,
+                    'tag_id' => $tagId,
+                    'created_at' => \Carbon\Carbon::now(),
+                    'updated_at' => \Carbon\Carbon::now()
+                  ]);
+            }
+        }
 
         $image->save();
 
@@ -109,6 +148,13 @@ class GalleryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $image = Image::find($id);
+
+        $imagePath = public_path().'/images/'.$image->filename;
+        unlink($imagePath);
+
+        $image->delete();
+
+        return redirect('/gallery')->with('success', 'Image deleted!');
     }
 }

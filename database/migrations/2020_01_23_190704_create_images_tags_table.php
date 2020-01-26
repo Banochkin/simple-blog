@@ -20,7 +20,8 @@ class CreateImagesTagsTable extends Migration
             $table->unsignedBigInteger('image_id')->index();
             $table->foreign('image_id')
                 ->references('id')
-                ->on('images');
+                ->on('images')
+                ->onDelete('cascade');
             $table->unsignedBigInteger('tag_id')->index();
             $table->foreign('tag_id')
                 ->references('id')

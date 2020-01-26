@@ -19,8 +19,13 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('blog', 'BlogController');
-Route::resource('gallery', 'GalleryController');
+Route::resource('blog', 'BlogController')->middleware('auth');
+Route::resource('gallery', 'GalleryController')->middleware('auth');
 
-Route::get('image-upload', 'ImageUploadController@imageUpload')->name('image.upload');
-Route::post('image-upload', 'ImageUploadController@imageUploadPost')->name('image.upload.post');
+// Route::get('image-upload', 'ImageUploadController@imageUpload')->name('image.upload');
+Route::post('image-upload', 'ImageUploadController@imageUploadPost')->name('image.upload.post')->middleware('auth');
+
+Route::get('json/blog', 'JsonController@getPosts');
+
+Route::get('json/gallery', 'JsonController@getImages');
+Route::get('json/gallery/{id}', 'JsonController@getImagesTag');

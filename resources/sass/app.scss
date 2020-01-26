@@ -6,3 +6,8 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+.table__gallery img {
+  max-width: 200px;
+  max-height: 200px;
+}

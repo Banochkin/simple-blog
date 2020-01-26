@@ -10,6 +10,6 @@ class Image extends Model
 
     public function showTags()
     {
-        return $this->hasMany('App\Tag');
+        return $this->belongsToMany('App\Tag', 'images_tags');
     }
 }
